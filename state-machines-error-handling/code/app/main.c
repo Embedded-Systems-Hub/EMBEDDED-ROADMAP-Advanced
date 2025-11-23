@@ -46,12 +46,6 @@ static status_t system_run_cycle(void)
     return STATUS_OK;
 }
 
-static status_t system_attempt_recovery(void)
-{
-
-    return sensors_init();
-}
-
 int main(void)
 {
     while (1)
@@ -75,14 +69,14 @@ int main(void)
             break;
 
         case SYS_STATE_ERROR:
-            // TODO: error state logic
             logger_log(LOG_ERROR, "System error: %d\r\n", last_error);
+            // TODO: error state logic
             sys_state = SYS_STATE_RECOVERY;
             break;
 
         case SYS_STATE_RECOVERY:
-            // TODO: recovery state logic
             logger_log(LOG_WARN, "Attempting system recovery...\r\n");
+            // TODO: recovery state logic
             sys_state = SYS_STATE_INIT;
             break;
         }
