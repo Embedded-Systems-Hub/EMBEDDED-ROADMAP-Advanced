@@ -29,19 +29,15 @@ status_t fan_controller_update(void)
     ret = sensors_read(sensor_temp, &temp);
     if (ret != STATUS_OK)
     {
-        temp = last_valid_temp;
+        fan_state = FAN_ERROR;
         (void)logger_log(LOG_WARN, "[FAN] Sensor read failed, using fallback\n");
     }
     else
     {
         if ((temp < temp_min_valid) || (temp > temp_max_valid))
         {
-            temp = last_valid_temp;
+            fan_state = FAN_ERROR;
             (void)logger_log(LOG_ERROR, "[FAN] Sensor out of range, fallback\n");
-        }
-        else
-        {
-            last_valid_temp = temp;
         }
     }
 
@@ -82,8 +78,13 @@ status_t fan_controller_update(void)
         fan_state = new_state;
 
         int fan_cmd = 0;
-        if (fan_state == FAN_LOW || fan_state == FAN_HIGH)
-            fan_cmd = 1;
+
+        if (fan_state == FAN_LOW)
+            fan_cmd = 50;      // 50%
+        else if (fan_state == FAN_HIGH)
+            fan_cmd = 100;     // 100%
+        else
+            fan_cmd = 0;       // OFF / ERROR
 
         CHECK_STATUS(actuators_write(actuator_fan, &fan_cmd));
     }
