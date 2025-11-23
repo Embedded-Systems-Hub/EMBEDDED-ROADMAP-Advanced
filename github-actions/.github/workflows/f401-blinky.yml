@@ -1,0 +1,26 @@
+name: STM32F401RE CICD Pipeline
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build toolchain
+        run: docker build -t f401-blinky .
+
+      - name: CMake configure and build
+        run: docker run --rm -v .:/work -w /work f401-blinky bash -c "cmake -S . -B build && cmake --build build"
+
+      - name: Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: blinky-${{ github.sha }}
+          path: |
+            build/blinky.elf
+            build/blinky.map
+          if-no-files-found: error
