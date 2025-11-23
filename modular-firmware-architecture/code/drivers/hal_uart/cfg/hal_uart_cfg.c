@@ -25,7 +25,7 @@ static int uart_write_wrapper(void *ctx, const uint8_t *data, size_t len)
 static int uart_read_wrapper(void *ctx, uint8_t *data, size_t len)
 {
 #ifdef TARGET_HOST
-    printf("[UART_CFG] read ctx=%p len=%zu -> zeros\n", ctx, len);
+    printf("[UART_CFG] read ctx=%p len=%zu\r\n", ctx, len);
 #endif
 
     for (size_t i = 0; i < len; i++)

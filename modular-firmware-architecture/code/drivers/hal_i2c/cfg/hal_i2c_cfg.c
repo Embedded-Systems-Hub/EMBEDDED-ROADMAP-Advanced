@@ -23,7 +23,7 @@ static int i2c_write_wrapper(void *ctx, uint8_t addr, const uint8_t *data, size_
 static int i2c_read_wrapper(void *ctx, uint8_t addr, uint8_t *data, size_t len)
 {
 #ifdef TARGET_HOST
-    printf("[I2C_CFG] read ctx=%p addr=0x%02X len=%zu -> zeros\n",
+    printf("[I2C_CFG] read ctx=%p addr=0x%02X len=%zu\r\n",
            ctx, addr, len);
 #endif
 
