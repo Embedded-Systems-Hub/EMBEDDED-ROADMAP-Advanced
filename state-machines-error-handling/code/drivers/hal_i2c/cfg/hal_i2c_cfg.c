@@ -1,0 +1,62 @@
+#include "hal_i2c.h"
+#include "error_codes.h"
+
+static status_t i2c_init_wrapper(void *ctx)
+{
+    status_t ret = STATUS_OK;
+
+    CHECK_NULL(ctx);
+
+#ifdef TARGET_HOST
+    printf("[I2C_CFG] init ctx=%p\n", ctx);
+#endif
+
+    return ret;
+}
+
+static status_t i2c_write_wrapper(void *ctx, uint8_t addr, const uint8_t *data, size_t len)
+{
+    status_t ret = STATUS_OK;
+
+    CHECK_NULL(ctx);
+    CHECK_NULL(data);
+
+#ifdef TARGET_HOST
+    printf("[I2C_CFG] write ctx=%p addr=0x%02X len=%zu data=[ ", ctx, addr, len);
+    for (size_t i = 0; i < len; i++)
+        printf("%02X ", data[i]);
+    printf("]\n");
+#endif
+
+    return ret;
+}
+
+static status_t i2c_read_wrapper(void *ctx, uint8_t addr, uint8_t *data, size_t len)
+{
+    status_t ret = STATUS_OK;
+
+    CHECK_NULL(ctx);
+    CHECK_NULL(data);
+
+#ifdef TARGET_HOST
+    printf("[I2C_CFG] read ctx=%p addr=0x%02X len=%zu\r\n",
+           ctx, addr, len);
+#endif
+
+    for (size_t i = 0; i < len; i++)
+        data[i] = 0U;
+
+    return ret;
+}
+
+static const HAL_I2C_Driver_t i2c_driver =
+{
+    .init  = i2c_init_wrapper,
+    .write = i2c_write_wrapper,
+    .read  = i2c_read_wrapper
+};
+
+const HAL_I2C_Driver_t* hal_i2c_get_drv(void)
+{
+    return &i2c_driver;
+}
